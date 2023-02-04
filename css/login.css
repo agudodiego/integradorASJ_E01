@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+:root {
+    --darkest-color: #082032;
+    --darker-color: #2C394B;
+    --dark-color: #334756;
+    --orange-color: #FF4C29;
+    --orangeLight-color: #FF4C2992;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+#contenedor-principal {
+    padding-top: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 2em;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(0deg, var(--darkest-color) 0%, #000 100%);
+}
+
+#contenedor-login {
+    width: 400px;
+    padding: 1em;
+    border-radius: 15px;
+    background: var(--dark-color);
+    text-align: center;
+}
+
+input {
+    width: 90%;
+    height: 40px;
+    font-family: 'Roboto', sans-serif;
+    padding-left: 10px;
+    display: block;
+    margin: 20px auto;
+    background-color: transparent;
+    color: var(--darkest-color);
+    border: none;
+    border-bottom: 1px solid var(--darkest-color);
+    outline: none;
+}
+
+input::placeholder {
+    color: var(--darkest-color);
+}
+
+input:focus {
+    border-bottom: 1px solid var(--orange-color);    
+    color: var(--orange-color);
+}
+
+button {
+    width: 90%;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    color: whitesmoke;
+    background-color: var(--orange-color);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 300ms;
+}
+
+button:hover {
+    letter-spacing: 4px;
+}
+
+.bienvenido {
+    font-size: 2.5em;
+}
+
+.registro {
+    font-weight: 400;
+    color: tomato;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 300ms;
+}
+
+.registro:hover {
+    letter-spacing: 4px;
+}
+
+
