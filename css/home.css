@@ -58,6 +58,24 @@ header img {
 #contenedor-usuario {
     display: flex;
     padding: 1em 3em;
+    position: relative;
+}
+
+#rollo {
+    position: absolute;
+    right: 5%;
+    top: 0;
+    height: 100%;
+    opacity: 9%;
+    animation-name: rotacion;
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes rotacion {
+    from{transform: rotateZ(0deg);}
+    to{transform: rotateZ(360deg);}
 }
 
 #sectorBusqueda {
@@ -68,7 +86,7 @@ header img {
     padding-bottom: 2em;
     border-radius: 10px;
     width: 40%;
-    max-height: 70vh;
+    height: 80vh;
     background-color: var(--dark-color);
 }
 

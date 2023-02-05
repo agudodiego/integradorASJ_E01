@@ -2,7 +2,7 @@
 const $form = document.querySelector('form');
 
 // TODO: Credenciales hardcodeadas, cambiar cuando tenga interaccion con BD
-const USER = 'diego';
+const USER = 'visitante_x';
 const PASS = '1234!';
 
 window.addEventListener('DOMContentLoaded', ()=> {

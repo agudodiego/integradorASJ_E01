@@ -2,6 +2,9 @@ const $nombreUsuario = document.getElementById('nombre-usuario');
 const $divSeriesBuscadas = document.getElementById('cont-card-busqueda');
 const $inputBuscador = document.getElementById('inputBuscador');
 
+let misSeries = [];
+let arraySeriesBuscadas = [];
+
 window.addEventListener('DOMContentLoaded', ()=> {
     const usuario = localStorage.getItem('usuario');
     $nombreUsuario.textContent += usuario;
@@ -24,7 +27,19 @@ window.addEventListener('DOMContentLoaded', ()=> {
         }
         
         if (e.target.matches('#add')) {
-            alert('agregar serie')
+            let idSerie = e.target.getAttribute('data-id');
+
+            let resultado = arraySeriesBuscadas.find((serie) => serie.show.id == idSerie);
+            console.log(resultado);
+
+            // TODO Antes del push deberia hacer instanciar un objeto con los miembros necesarios para la BD
+            /* Para ver cuantas temoradas y capitulos tiene la serie debo hacer una nueva consulta a:
+               https://api.tvmaze.com/shows/ACA_VA_ID/seasons Consultar con profes si vale la pena
+            */
+            misSeries.push(resultado);
+
+            // TODO Crear funcion para pintar la serie en el div sectorSeries
+            
         }
     });
 });
@@ -51,18 +66,18 @@ const fetchSeriesDeAPI = async (url)=> {
 const pintarSeriesBuscadas = async (elementoHTML, url)=> {
     elementoHTML.innerHTML = '';
     try {
-        const arraySeriesBuscadas = await fetchSeriesDeAPI(url);
+        arraySeriesBuscadas = await fetchSeriesDeAPI(url);
         arraySeriesBuscadas.forEach(serie => {
             // console.log(serie.show.name)
             elementoHTML.innerHTML += `
-            <div id="card-busqueda">
+            <div id="card-busqueda" >
                 ${serie.show.image ? `<img src="${serie.show.image.medium}" alt="">` : `<img src="https://via.placeholder.com/57x80/CCC/FF0000/?text=X" alt="">` }
                 <div id="card-busqueda-textos">
                 <h3>${serie.show.name}</h3>
                 <h5>${serie.show.premiered}</h5>
                 </div>
-                <div id="add">+</div>
-                </div>
+                <div id="add" data-id=${serie.show.id}>+</div>
+            </div>
             `;
         });        
     } catch (error) {
