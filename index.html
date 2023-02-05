@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="assets/favicon.ico">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/login.css">
     <title>S-app</title>
 </head>
@@ -13,13 +14,14 @@
         <div id="contenedor-login">
             <h2 class="bienvenido">Bienvenido</h2>
             <form action="">
-                <input type="text" placeholder="usuario">
-                <input type="password" placeholder="contraseña">
-                <button type="submit">ingresar</button>
+                <input type="text" placeholder="usuario" required>
+                <input type="password" placeholder="contraseña" required>
+                <button class="btnIngresar" type="submit">ingresar</button>
             </form>
             <h3 class="registro">registrarse</h3>
         </div>
     </main>
-    <script src="js/login.js"></script>
+    
+    <script type="module" src="js/login.js"></script>
 </body>
 </html>
