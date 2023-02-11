@@ -10,16 +10,33 @@
 </head>
 <body>
     <main id="contenedor-principal">
-        <img src="assets/sapp_logo.svg" alt="logo s-app">
+        <img id="logo_login" src="assets/sapp_logo.svg" alt="logo s-app">
         <div id="contenedor-login">
             <h2 class="bienvenido">Bienvenido</h2>
-            <form action="">
+            <form id="formLogin" action="">
                 <input type="text" placeholder="usuario" required>
                 <input type="password" placeholder="contraseña" required>
                 <button class="btnIngresar" type="submit">ingresar</button>
             </form>
-            <h3 class="registro">registrarse</h3>
+            <h3 class="txtRegistro">registrarse</h3>
         </div>
+
+        <!-- REGISTRO -->
+        <div id="contenedor-registro" class="hidden">
+            <div id="head_registro">
+                <img id="logo_registro" src="assets/sapp_logo.svg" alt="logo s-app">
+                <h2 class="registrate">Registrate!</h2>                
+            </div>
+
+            <form id="formRegistro" action="">
+                <input class="inputReg" type="text" placeholder="usuario" required>
+                <input class="inputReg" type="password" placeholder="contraseña" required>
+                <input class="inputReg" type="email" placeholder="email" required>
+                <button class="btnRegistrarse" type="submit">registrarse</button>
+            </form>
+            <h3 class="txtCancelar">cancelar</h3>
+        </div>
+
     </main>
     
     <script type="module" src="js/login.js"></script>

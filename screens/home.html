@@ -1,49 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="../assets/favicon.ico">
-        <link rel="stylesheet" href="../css/home.css">
-        <title>S-app</title>
-    </head>
-    <body>
-        <main id="contenedor-principal">
-            <header>
-                <img src="../assets/sapp_logo.svg" alt="logo s-app">
-                <div id="usuario-logeado">
-                    <h4 id="nombre-usuario">usuario: </h4>
-                    <img id="btnLogout" src="../assets/logout.svg" alt="logout logo">
-                </div>
-            </header> 
-            <main id="contenedor-usuario">
-                <img src="../assets/rollo_serie.svg" alt="" id="rollo">
-                <div id="sectorBusqueda">
-                    <div id="buscador">
-                        <input id="inputBuscador" type="text" placeholder="Buscar serie">
-                        <img id="lupa" src="../assets/lupa.svg" alt="lupa">
-                    </div>
-                    <div id="cont-card-busqueda">
-                        <!-- DUMMY cards -->
-                        <!-- <div id="card-busqueda">
-                            <img src="https://placeimg.com/150/80/animals" alt="">
-                            <div id="card-busqueda-textos">
-                                <h3>Titulo Serie</h3>
-                                <h5>2023</h5>
-                            </div>
-                            <div id="add">+</div>
-                        </div> -->
-                    </div>
-                </div>
-                <div id="sectorSeries">
-                    <h2>Mis Series</h2>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../assets/favicon.ico">
+    <link rel="stylesheet" href="../css/home.css">
+    <title>S-app</title>
+</head>
+
+<body>
+    <main id="contenedor-principal">
+        <header>
+            <img id="logo" src="../assets/sapp_logo.svg" alt="logo s-app">
+            <div id="usuario-logeado">
+                <img id="avatar" src="../assets/avatar.svg" alt="avatar">
+                <h4 id="nombre-usuario"></h4>
+                <img id="btnLogout" src="../assets/logout.svg" alt="logout logo">
+            </div>
+        </header>
+        <main id="contenedor-usuario">
+            <img src="../assets/rollo_serie.svg" alt="" id="rollo">
+
+            <div id="sectorBusqueda">
+                <div id="buscador">
+                    <input id="inputBuscador" type="text" placeholder="Buscar serie">
+                    <img id="lupa" src="../assets/lupa.svg" alt="lupa">
+                </div>
+                <div id="cont-card-busqueda">
+                    <!-- CARDS DINAMICAS -->
+                </div>
+            </div>
+
+            <div id="sectorSeries">
+                <h2>Mis Series</h2>
+                <div id="seriesSeleccionadas">
+                    <!-- CARDS DINAMICAS DE SERIES SELECCIONADAS -->
+
+                    <!-- <div id="cards_seleccionadas">
+                        <div id="btnPlataforma">ir a Plataforma</div>
+                        <img id="imagen" src="https://static.tvmaze.com/uploads/images/medium_portrait/31/78286.jpg" alt="img serie">
+                        <div id="pieImagen">
+                            <p id="txtPie">T2-E7</p>
+                            <div id="mas">+</div>
+                        </div>
+                    </div> -->
 
                 </div>
-            </main>         
-            
+            </div>
         </main>
-        
-        <script type="module" src="../js/home.js"></script>
+
+    </main>
+
+    <script type="module" src="../js/home.js"></script>
 </body>
+
 </html>

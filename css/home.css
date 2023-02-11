@@ -28,7 +28,7 @@ header {
     padding: 3em;
 }
 
-header img {
+#logo {
     width: 80px;
 }
 
@@ -37,13 +37,18 @@ header img {
     align-items: center;
 }
 
+#avatar {
+    width: 40px;
+    margin-right: .5em;
+}
+
 #btnLogout {
     width: 30px;
     cursor: pointer;
 }
 
 #nombre-usuario {
-    margin-right: 1em;
+    margin-right: 3em;
     color: whitesmoke;
 }
 
@@ -54,29 +59,6 @@ header img {
 }
 
 /* ************************** BUSQUEDA ************************* */
-
-#contenedor-usuario {
-    display: flex;
-    padding: 1em 3em;
-    position: relative;
-}
-
-#rollo {
-    position: absolute;
-    right: 5%;
-    top: 0;
-    height: 100%;
-    opacity: 9%;
-    animation-name: rotacion;
-    animation-duration: 30s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
-
-@keyframes rotacion {
-    from{transform: rotateZ(0deg);}
-    to{transform: rotateZ(360deg);}
-}
 
 #sectorBusqueda {
     display: flex;
@@ -96,7 +78,7 @@ header img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 35px 0;
+    padding: 50px 0;
 }
 
 #inputBuscador {
@@ -124,10 +106,13 @@ header img {
 
 #lupa {
     width: 44px;
-    background-color: var(--darkest-color);
     border-radius: 0 5px 5px 0;
     padding: 3px;
     cursor: pointer;
+}
+
+#lupa:hover {
+    background-color: var(--darkest-color);
 }
 
 #cont-card-busqueda {
@@ -138,8 +123,9 @@ header img {
 #card-busqueda {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
-    padding-left: 10px;
+    padding: 0 10px;
     width: 100%;
     height: 80px;
     background-color: var(--darkest-color);
@@ -152,7 +138,7 @@ header img {
 }
 
 #card-busqueda-textos {
-    width: 72%;
+    width: 73%;
     color: whitesmoke;
     padding-left: 1em;
     justify-self: flex-start;
@@ -176,7 +162,35 @@ header img {
     background-color: var(--orange-color);
 }
 
+#btnAdd {
+    width: 40%;
+    padding-left: 5px;
+}
+
 /* ************************** SERIES ************************* */
+#contenedor-usuario {
+    display: flex;
+    padding: 1em 3em;
+    position: relative;
+    overflow: hidden;
+}
+
+#rollo {
+    position: absolute;
+    right: 5%;
+    bottom: 0;
+    height: 100%;
+    opacity: 9%;
+    animation-name: rotacion;
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes rotacion {
+    from{transform: rotateZ(0deg);}
+    to{transform: rotateZ(360deg);}
+}
 
 #sectorSeries {
     padding: 0 2em;
@@ -190,4 +204,77 @@ header img {
     width: 100%;
     padding-bottom: .6em;
     font-size: 2em;
+}
+
+#seriesSeleccionadas {
+    padding-top: 2em;
+    display: flex;
+    gap: 2em;
+    /* overflow-y: auto; */
+}
+
+#card-miSeleccion {
+    color: whitesmoke;
+}
+
+/* ************************** CARD SERIES SELECCIONADAS ************************* */
+
+#cards_seleccionadas {
+    width: max-content;
+    position: relative;
+    width: 210px;
+    height: 345px;
+    transition: all 300ms;
+}
+
+#cards_seleccionadas:hover {
+    transform: scale(1.05);
+}
+
+#imagen {
+    width: 100%;
+}
+
+#btnPlataforma {
+    position: absolute;
+    background-color: var(--darkest-color);
+    border: 1px solid whitesmoke;
+    color: whitesmoke;
+    width: max-content;
+    padding: .5em;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+#pieImagen{
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(41, 83, 83, 0.815);
+    width: 100%;
+    padding: 5px;
+    border-radius: 0 0 25px 0;
+}
+
+#mas {
+    text-align: center;
+    border-radius: 50%;
+    background-color: var(--orange-color);
+    border: 2px solid whitesmoke;
+    width: 40px;
+    height: 40px;
+    font-size: 2em;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#txtPie {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--orange-color);
+    margin-left: 5px;
 }
