@@ -5,6 +5,17 @@ const $divSeriesBuscadas = document.getElementById('cont-card-busqueda');
 const $inputBuscador = document.getElementById('inputBuscador');
 const $seriesSeleccionadas = document.getElementById('seriesSeleccionadas');
 
+// card detalles
+const $detalleSerie = document.getElementById('detalleSerie');
+const $close = document.getElementById('close');
+const $titulo = document.getElementById('titulo');
+const $anio = document.getElementById('anio');
+const $genero = document.getElementById('genero');
+const $descripcion = document.getElementById('descripcion');
+const $detSerie = document.getElementById('detSerie');
+const $sitioOficial = document.getElementById('sitioOficial');
+const $btnEliminar = document.getElementById('btnEliminar');
+
 let misSeries = [];
 let arraySeriesBuscadas = [];
 
@@ -13,13 +24,14 @@ window.addEventListener('DOMContentLoaded', () => {
   $nombreUsuario.textContent += credenciales.user;
 
   document.addEventListener('click', (e) => {
-    // console.log(e.target)
 
+    // Accion boton LOGOUT
     if (e.target.matches('#btnLogout')) {
       localStorage.setItem('credenciales', JSON.stringify({ user: '', pass: '' }));
       window.location.href = '../index.html';
     }
 
+    // Accion boton BUSCAR
     if (e.target.matches('#lupa')) {
       const terminoBusqueda = $inputBuscador.value;
       $inputBuscador.value = '';
@@ -30,6 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    // Accion boton AGREGAR A MIS SERIES
     if (e.target.matches('#btnAdd')) {
       // obtengo el id de la serie sobre la cual se clickeo
       let idSerie = e.target.getAttribute('data-id');
@@ -39,10 +52,55 @@ window.addEventListener('DOMContentLoaded', () => {
 
       agregarAMisSeries(resultado);
     }
+
+    //************************************ 
+    //       CARD DETALLE SERIES
+    //************************************ 
+
+    // Accion boton MAS INFORMACION
+    if (e.target.matches('#mas')) {
+      $detalleSerie.classList.remove('hidden');
+
+      // obtengo el id de la serie sobre la cual se clickeo
+      let idSerie = e.target.getAttribute('data-id');
+
+      // obtengo la serie del array de resutados de la API
+      let resultado = misSeries.find((serie) => serie.id == idSerie);
+
+      // le seteo el id de la serie en el data-atribute del boton eliminar
+      $btnEliminar.setAttribute('data-id', idSerie);
+
+      llenarCardDetalleSeries(resultado, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial);
+
+    }
+
+    // Accion boton CERRAR POP-UP DETALLES
+    if (e.target.matches('#close')) {
+      $detalleSerie.classList.add('hidden');
+      $descripcion.classList.remove('estilosDescripcion');
+    }
+
+    if (e.target.matches('#btnEliminar')) {
+      // obtengo el id de la serie sobre la cual se clickeo
+      let idSerie = e.target.getAttribute('data-id');
+
+      // obtengo la serie del array de resutados de la API
+      let resultado = misSeries.find((serie) => serie.id == idSerie);
+
+      // obtengo el indice del elemento recuperado en el array de series guardadas
+      let index = misSeries.indexOf(resultado);
+
+      // quito del array la serie a eliminar segun el indice obtenido
+      misSeries.splice(index, 1);
+
+      pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
+
+      $detalleSerie.classList.add('hidden');
+      $descripcion.classList.remove('estilosDescripcion');
+    }
+
   });
 });
-
-
 
 
 //***************************** 
@@ -130,7 +188,6 @@ const agregarAMisSeries = async (resultado) => {
     );
 
     misSeries.push(serie);
-    console.log(serie);
 
     pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
 
@@ -138,4 +195,26 @@ const agregarAMisSeries = async (resultado) => {
     console.log(error)
   }
 
+}
+
+const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial)=> {
+  $detSerie.style.backgroundImage = `url('${serie.img_big}')`;
+
+  $titulo.textContent = serie.titulo;
+
+  $anio.textContent = serie.anio.substring(0,4);
+
+  $genero.textContent = '';
+  serie.genero.forEach((g)=> {
+    $genero.textContent += `${g} `; 
+  })
+
+  $descripcion.innerHTML = '';
+  if (serie.descripcion.length < 200) {
+    $descripcion.innerHTML = serie.descripcion;
+    $descripcion.classList.add('estilosDescripcion');
+  }
+  
+  $sitioOficial.setAttribute('href', serie.sitio_oficial);
+  $sitioOficial.setAttribute('target', '_blamk');
 }

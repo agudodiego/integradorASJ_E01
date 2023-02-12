@@ -11,6 +11,7 @@
 
 <body>
     <main id="contenedor-principal">
+
         <header>
             <img id="logo" src="../assets/sapp_logo.svg" alt="logo s-app">
             <div id="usuario-logeado">
@@ -19,7 +20,9 @@
                 <img id="btnLogout" src="../assets/logout.svg" alt="logout logo">
             </div>
         </header>
+
         <main id="contenedor-usuario">
+
             <img src="../assets/rollo_serie.svg" alt="" id="rollo">
 
             <div id="sectorBusqueda">
@@ -28,7 +31,7 @@
                     <img id="lupa" src="../assets/lupa.svg" alt="lupa">
                 </div>
                 <div id="cont-card-busqueda">
-                    <!-- CARDS DINAMICAS -->
+                    <!-- CARDS DINAMICAS DE SERIES BUSCADAS -->
                 </div>
             </div>
 
@@ -36,19 +39,61 @@
                 <h2>Mis Series</h2>
                 <div id="seriesSeleccionadas">
                     <!-- CARDS DINAMICAS DE SERIES SELECCIONADAS -->
+                </div>
+            </div>
 
-                    <!-- <div id="cards_seleccionadas">
-                        <div id="btnPlataforma">ir a Plataforma</div>
-                        <img id="imagen" src="https://static.tvmaze.com/uploads/images/medium_portrait/31/78286.jpg" alt="img serie">
-                        <div id="pieImagen">
-                            <p id="txtPie">T2-E7</p>
-                            <div id="mas">+</div>
+            
+        </main>
+
+        <div id="detalleSerie" class="hidden">
+            <div id="close">X</div>
+            <div id="contenido">
+                <div id="detSerie">
+                    <div id="encabezado">
+                        <p id="titulo"></p>
+                        <p id="anio"></p>
+                        <p id="genero"></p>
+                    </div>
+                    <div id="pie">
+                        <p id="descripcion"></p>                        
+                    </div>
+                </div>
+
+                <div id="crud">
+
+                    <div id="temporada">
+                        <p>Temporada en curso</p>
+                        <div>
+                            <div id="sumar" class="btnCrud">+</div>
+                            <div id="restar" class="btnCrud">-</div>
+                            <div id="display">2 / 3</div>
                         </div>
-                    </div> -->
+                    </div>
+
+                    <div id="episodio">
+                        <p>Episodios vistos</p>
+                        <div>
+                            <div id="sumar" class="btnCrud">+</div>
+                            <div id="restar" class="btnCrud">-</div>
+                            <div id="display">5 / 38</div>
+                        </div>
+                    </div>
+
+                    <a id="sitioOficial">Sitio Oficial</a>
+
+                    <div id="plataforma">
+                        <p>PLataforma</p>
+                        <input type="text">
+                    </div>
+
+                    <div id="accionesCrud">
+                        <div id="btnGuardar">guardar</div>
+                        <div id="btnEliminar" data-id="">eliminar</div>
+                    </div>
 
                 </div>
             </div>
-        </main>
+        </div>
 
     </main>
 

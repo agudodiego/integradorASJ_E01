@@ -17,6 +17,10 @@
     font-family: 'Roboto', sans-serif;
 }
 
+.hidden {
+    display: none;
+}
+
 /* ************************** HEADER ************************* */
 
 header {
@@ -53,12 +57,13 @@ header {
 }
 
 #contenedor-principal {
+    position: relative;
     width: 100%;
     height: 100vh;
     background: linear-gradient(0deg, var(--darkest-color) 0%, #000 100%);
 }
 
-/* ************************** BUSQUEDA ************************* */
+/* ************************** SECTOR BUSQUEDA ************************* */
 
 #sectorBusqueda {
     display: flex;
@@ -167,7 +172,7 @@ header {
     padding-left: 5px;
 }
 
-/* ************************** SERIES ************************* */
+/* ************************** SECTOR SERIES ************************* */
 #contenedor-usuario {
     display: flex;
     padding: 1em 3em;
@@ -250,7 +255,6 @@ header {
 #pieImagen{
     position: absolute;
     bottom: 0;
-    z-index: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -278,3 +282,149 @@ header {
     color: var(--orange-color);
     margin-left: 5px;
 }
+
+/* ************************** CARD DETALLE DE SERIE ************************* */
+
+#detalleSerie {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 700px;
+    height: 600px;
+    background-color: #000;
+    border: 1px solid #888;
+    border-radius: 10px 30px 10px 10px;
+    overflow: hidden;
+}
+
+#close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    outline: 4px solid var(--orange-color);
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--orange-color);
+    cursor: pointer;
+}
+
+#contenido {
+    display: flex;
+    width: 100%;
+    height: 100%;    
+}
+
+#detSerie {
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+    width: 70%;   
+    padding: 1em 4em 2em 1em; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#encabezado {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: whitesmoke;
+    padding: .5em 1em;
+    border-radius: 10px;
+    width: max-content;
+}
+
+#encabezado #titulo {
+    font-size: 2em;
+    font-weight: 700;
+}
+
+#detSerie p {
+    margin-bottom: .3em;
+    font-size: 1.2em;
+}
+
+.estilosDescripcion {
+    color: whitesmoke;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    padding: 1em;
+}
+
+#crud {
+    background-color: black;
+    box-shadow: -28px 0 40px 30px black;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3em 2em 2em 0;
+}
+
+#temporada p, #episodio p {
+    color: whitesmoke;
+}
+
+#temporada>div, #episodio>div {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#temporada #display, #episodio #display {
+    color: var(--orange-color);
+}
+
+#display {
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.btnCrud {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 35px;
+    border: 3px solid var(--orange-color);
+    border-radius: 8px;
+    color: var(--orange-color);
+    font-size: 2em;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+#plataforma p {
+    color: whitesmoke;
+    margin-bottom: 10px;
+}
+
+#btnEliminar, #btnGuardar, #sitioOficial {
+    width: max-content;
+    padding: 5px;
+    border: 3px solid var(--orange-color);
+    border-radius: 8px;
+    color: var(--orange-color);
+    cursor: pointer;
+}
+
+#btnEliminar:hover, #btnGuardar:hover, #sitioOficial:hover, .btnCrud:hover {
+    color: whitesmoke;
+    background-color: var(--orange-color);
+}
+
+#accionesCrud {
+    display: flex;
+    justify-content: space-between;
+}
+
