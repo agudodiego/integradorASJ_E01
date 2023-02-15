@@ -1,6 +1,6 @@
 export class Serie {
     
-    constructor(id, titulo, temporadas, episodios, img_small, img_big, anio, sitio_oficial, descripcion, plataforma, genero){
+    constructor(id, titulo, temporadas, episodios, img_small, img_big, anio, sitio_oficial, descripcion, plataforma, plataformaUrl, genero){
         this.id = id,
         this.titulo = titulo,
         this.temporadas = temporadas,
@@ -11,6 +11,7 @@ export class Serie {
         this.sitio_oficial = sitio_oficial,
         this.descripcion = descripcion,
         this.plataforma = plataforma,
+        this.plataformaUrl = plataformaUrl,
         this.genero = genero
     }
 }

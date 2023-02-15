@@ -409,6 +409,19 @@ a {
     margin-bottom: 10px;
 }
 
+#selPlataforma {
+    background-color: var(--dark-color);
+    color: whitesmoke;
+    width: 100%;
+    height: 30px;
+    border: none;
+    padding-left: .5em;
+}
+
+.select-selected {
+    background-color: rgb(172, 11, 54);
+  }
+
 #btnEliminar, #btnGuardar, #sitioOficial {
     width: max-content;
     padding: 5px;

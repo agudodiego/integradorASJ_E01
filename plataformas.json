@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "plataforma": "cuevana",
+        "url": "https://www4.cuevana3.ch/"
+    },
+    {
+        "id": 2,
+        "plataforma": "pelispedia",
+        "url": "https://pelispedia.one/"
+    },
+    {
+        "id": 3,
+        "plataforma": "seriesw",
+        "url": "https://mindandfist.com/"
+    }
+]

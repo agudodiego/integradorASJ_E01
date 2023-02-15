@@ -15,13 +15,18 @@ const $descripcion = document.getElementById('descripcion');
 const $detSerie = document.getElementById('detSerie');
 const $sitioOficial = document.getElementById('sitioOficial');
 const $btnEliminar = document.getElementById('btnEliminar');
+const $btnGuardar = document.getElementById('btnGuardar');
+const $selPlataforma = document.getElementById('selPlataforma');
 
+let plataformas = [];
 let misSeries = [];
 let arraySeriesBuscadas = [];
 
 window.addEventListener('DOMContentLoaded', () => {
   const credenciales = JSON.parse(localStorage.getItem('credenciales'));
   $nombreUsuario.textContent += credenciales.user;
+
+  plataformas = JSON.parse(localStorage.getItem('plataformas'));
 
   document.addEventListener('click', (e) => {
 
@@ -53,10 +58,6 @@ window.addEventListener('DOMContentLoaded', () => {
       agregarAMisSeries(resultado);
     }
 
-    //************************************ 
-    //       CARD DETALLE SERIES
-    //************************************ 
-
     // Accion boton MAS INFORMACION
     if (e.target.matches('#mas')) {
       $detalleSerie.classList.remove('hidden');
@@ -67,11 +68,44 @@ window.addEventListener('DOMContentLoaded', () => {
       // obtengo la serie del array de resutados de la API
       let resultado = misSeries.find((serie) => serie.id == idSerie);
 
-      // le seteo el id de la serie en el data-atribute del boton eliminar
+      // le seteo el id de la serie en el data-atribute del boton eliminar y guardar
       $btnEliminar.setAttribute('data-id', idSerie);
+      $btnGuardar.setAttribute('data-id', idSerie);
 
-      llenarCardDetalleSeries(resultado, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial);
+      llenarCardDetalleSeries(resultado, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial, $selPlataforma, plataformas);
 
+    }
+
+    //************************************ 
+    //       CARD DETALLE SERIES
+    //************************************ 
+
+    // Accion boton GUARDAR
+    if (e.target.matches('#btnGuardar')) {
+      const seleccion = $selPlataforma.value;
+      const plataforma = plataformas.find((pl)=> pl.plataforma == seleccion);
+
+      // obtengo el id de la serie sobre la cual se clickeo
+      let idSerie = e.target.getAttribute('data-id');
+
+      // obtengo la serie del array de resutados de la API
+      let resultado = misSeries.find((serie) => serie.id == idSerie);
+
+      if (resultado.plataforma != seleccion) {
+
+        if (plataforma) {
+          resultado.plataforma = seleccion;
+          resultado.plataformaUrl = plataforma.url;
+          pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
+        } else {
+          resultado.plataforma = null;
+          pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
+        }
+
+      }     
+      
+      $detalleSerie.classList.add('hidden');
+      $descripcion.classList.remove('estilosDescripcion');    
     }
 
     // Accion boton CERRAR POP-UP DETALLES
@@ -80,6 +114,7 @@ window.addEventListener('DOMContentLoaded', () => {
       $descripcion.classList.remove('estilosDescripcion');
     }
 
+    // Accion boton ELIMINAR
     if (e.target.matches('#btnEliminar')) {
       // obtengo el id de la serie sobre la cual se clickeo
       let idSerie = e.target.getAttribute('data-id');
@@ -148,7 +183,7 @@ const pintarSeriesSeleccionadas = (elementoHTML, array) => {
   array.forEach((serie) => {
     elementoHTML.innerHTML += `
         <div id="cards_seleccionadas">
-            <div id="btnPlataforma">ir a Plataforma</div>
+            ${serie.plataforma != null ? `<a href="${serie.plataformaUrl}" target="_blank" id="btnPlataforma">${serie.plataforma}</a>` : `<a id="btnPlataforma">ir a Plataforma</a>` }            
             ${serie.img_small ? `<img src="${serie.img_small}" alt="">` : `<img src="https://via.placeholder.com/210x297/CCC/FF0000/?text=${serie.titulo}" alt="">`}
             <div id="pieImagen">
                 <p id="txtPie">T0-E0</p>
@@ -184,6 +219,7 @@ const agregarAMisSeries = async (resultado) => {
       resultado.show?.officialSite,
       resultado.show?.summary,
       null,
+      null,
       resultado.show.genres
     );
 
@@ -197,7 +233,7 @@ const agregarAMisSeries = async (resultado) => {
 
 }
 
-const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial)=> {
+const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial, $selPlataforma, plataformas)=> {
   $detSerie.style.backgroundImage = `url('${serie.img_big}')`;
 
   $titulo.textContent = serie.titulo;
@@ -217,4 +253,24 @@ const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $
   
   $sitioOficial.setAttribute('href', serie.sitio_oficial);
   $sitioOficial.setAttribute('target', '_blamk');
+
+  if (serie.plataforma != null) {
+
+    $selPlataforma.innerHTML = '<option value="">seleccionar</option>';
+    plataformas.forEach((pl)=> {
+      if (pl.plataforma == serie.plataforma ) {
+        $selPlataforma.innerHTML += `<option value="${serie.plataforma}" selected>${serie.plataforma}</option>`;
+      } else {
+        $selPlataforma.innerHTML += `<option value="${pl.plataforma}">${pl.plataforma}</option>`;
+      }
+    })
+
+  } else {
+
+    $selPlataforma.innerHTML = '<option value="" selected>seleccionar</option>';
+    plataformas.forEach((pl)=> {
+      $selPlataforma.innerHTML += `<option value="${pl.plataforma}">${pl.plataforma}</option>`;
+    })
+
+  }
 }

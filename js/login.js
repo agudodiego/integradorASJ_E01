@@ -11,6 +11,9 @@ const $cancelar = document.querySelector('.txtCancelar');
 
 window.addEventListener('DOMContentLoaded', () => {
 
+    const URL = "../plataformas.json"
+    recuperarPlataformas(URL);
+
     document.addEventListener('click', (e) => {
 
         if (e.target.matches('.txtRegistro')) {
@@ -62,3 +65,17 @@ window.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'index.html';
     })
 })
+
+//***************************** 
+//         FUNCIONES
+//*****************************
+
+const recuperarPlataformas = async (url)=> {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        localStorage.setItem('plataformas', JSON.stringify(data));
+    } catch (error) {
+        console.error(error);
+    }
+}
