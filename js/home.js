@@ -5,6 +5,10 @@ const $divSeriesBuscadas = document.getElementById('cont-card-busqueda');
 const $inputBuscador = document.getElementById('inputBuscador');
 const $seriesSeleccionadas = document.getElementById('seriesSeleccionadas');
 
+// carrousel
+const $btnNext = document.getElementById('btnNext');
+const $btnPrev = document.getElementById('btnPrev');
+
 // card detalles
 const $detalleSerie = document.getElementById('detalleSerie');
 const $close = document.getElementById('close');
@@ -23,6 +27,20 @@ let misSeries = [];
 let arraySeriesBuscadas = [];
 
 window.addEventListener('DOMContentLoaded', () => {
+
+  //*************   carrousel   *********** */
+  let containerDimensiones = $seriesSeleccionadas.getBoundingClientRect();
+  let containerWidth = containerDimensiones.width;
+
+  $btnNext.addEventListener('click', () => {
+    $seriesSeleccionadas.scrollLeft += containerWidth;
+  })
+
+  $btnPrev.addEventListener('click', () => {
+    $seriesSeleccionadas.scrollLeft -= containerWidth;
+  })
+  //*************************************** */
+
   const credenciales = JSON.parse(localStorage.getItem('credenciales'));
   $nombreUsuario.textContent += credenciales.user;
 
@@ -83,7 +101,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Accion boton GUARDAR
     if (e.target.matches('#btnGuardar')) {
       const seleccion = $selPlataforma.value;
-      const plataforma = plataformas.find((pl)=> pl.plataforma == seleccion);
+      const plataforma = plataformas.find((pl) => pl.plataforma == seleccion);
 
       // obtengo el id de la serie sobre la cual se clickeo
       let idSerie = e.target.getAttribute('data-id');
@@ -102,10 +120,10 @@ window.addEventListener('DOMContentLoaded', () => {
           pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
         }
 
-      }     
-      
+      }
+
       $detalleSerie.classList.add('hidden');
-      $descripcion.classList.remove('estilosDescripcion');    
+      $descripcion.classList.remove('estilosDescripcion');
     }
 
     // Accion boton CERRAR POP-UP DETALLES
@@ -183,7 +201,7 @@ const pintarSeriesSeleccionadas = (elementoHTML, array) => {
   array.forEach((serie) => {
     elementoHTML.innerHTML += `
         <div id="cards_seleccionadas">
-            ${serie.plataforma != null ? `<a href="${serie.plataformaUrl}" target="_blank" id="btnPlataforma">${serie.plataforma}</a>` : `<a id="btnPlataforma">ir a Plataforma</a>` }            
+            ${serie.plataforma != null ? `<a href="${serie.plataformaUrl}" target="_blank" id="btnPlataforma">${serie.plataforma}</a>` : `<a id="btnPlataforma">ir a Plataforma</a>`}            
             ${serie.img_small ? `<img src="${serie.img_small}" alt="">` : `<img src="https://via.placeholder.com/210x297/CCC/FF0000/?text=${serie.titulo}" alt="">`}
             <div id="pieImagen">
                 <p id="txtPie">T0-E0</p>
@@ -233,16 +251,16 @@ const agregarAMisSeries = async (resultado) => {
 
 }
 
-const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial, $selPlataforma, plataformas)=> {
+const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial, $selPlataforma, plataformas) => {
   $detSerie.style.backgroundImage = `url('${serie.img_big}')`;
 
   $titulo.textContent = serie.titulo;
 
-  $anio.textContent = serie.anio.substring(0,4);
+  $anio.textContent = serie.anio.substring(0, 4);
 
   $genero.textContent = '';
-  serie.genero.forEach((g)=> {
-    $genero.textContent += `${g} `; 
+  serie.genero.forEach((g) => {
+    $genero.textContent += `${g} `;
   })
 
   $descripcion.innerHTML = '';
@@ -250,15 +268,15 @@ const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $
     $descripcion.innerHTML = serie.descripcion;
     $descripcion.classList.add('estilosDescripcion');
   }
-  
+
   $sitioOficial.setAttribute('href', serie.sitio_oficial);
   $sitioOficial.setAttribute('target', '_blamk');
 
   if (serie.plataforma != null) {
 
     $selPlataforma.innerHTML = '<option value="">seleccionar</option>';
-    plataformas.forEach((pl)=> {
-      if (pl.plataforma == serie.plataforma ) {
+    plataformas.forEach((pl) => {
+      if (pl.plataforma == serie.plataforma) {
         $selPlataforma.innerHTML += `<option value="${serie.plataforma}" selected>${serie.plataforma}</option>`;
       } else {
         $selPlataforma.innerHTML += `<option value="${pl.plataforma}">${pl.plataforma}</option>`;
@@ -268,7 +286,7 @@ const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $
   } else {
 
     $selPlataforma.innerHTML = '<option value="" selected>seleccionar</option>';
-    plataformas.forEach((pl)=> {
+    plataformas.forEach((pl) => {
       $selPlataforma.innerHTML += `<option value="${pl.plataforma}">${pl.plataforma}</option>`;
     })
 

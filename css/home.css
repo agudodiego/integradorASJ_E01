@@ -212,10 +212,37 @@ header {
 }
 
 #seriesSeleccionadas {
-    padding-top: 2em;
+    padding: 2.5em 1em;
     display: flex;
     gap: 2em;
-    /* overflow-y: auto; */
+    overflow-x: auto;
+    scroll-behavior: smooth;
+}
+
+#btnPrev {
+    transform: rotate(180deg);
+}
+
+#btnPrev, #btnNext {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(84, 84, 84, 0.3);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#btnPrev:hover, #btnNext:hover {
+    background-color: whitesmoke;
+}
+
+#contenedorBtnesCarrusel {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2em;
+    position: relative;
 }
 
 #card-miSeleccion {
