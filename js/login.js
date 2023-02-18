@@ -11,7 +11,8 @@ const $cancelar = document.querySelector('.txtCancelar');
 
 window.addEventListener('DOMContentLoaded', () => {
 
-    const URL = "../plataformas.json"
+    // const URL2 = "../plataformas.json"
+    const URL = "http://localhost:8080/Series_app_backend-1.0-SNAPSHOT/api/plataformas"
     recuperarPlataformas(URL);
 
     document.addEventListener('click', (e) => {

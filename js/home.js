@@ -109,14 +109,15 @@ window.addEventListener('DOMContentLoaded', () => {
       // obtengo la serie del array de resutados de la API
       let resultado = misSeries.find((serie) => serie.id == idSerie);
 
-      if (resultado.plataforma != seleccion) {
+      if (resultado.plataforma.plataforma != seleccion) {
 
         if (plataforma) {
-          resultado.plataforma = seleccion;
-          resultado.plataformaUrl = plataforma.url;
+          resultado.plataforma.plataforma = seleccion;
+          resultado.plataforma.url = plataforma.url;
           pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
         } else {
-          resultado.plataforma = null;
+          resultado.plataforma.plataforma = null;
+          resultado.plataforma.url = null;
           pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
         }
 
@@ -201,7 +202,7 @@ const pintarSeriesSeleccionadas = (elementoHTML, array) => {
   array.forEach((serie) => {
     elementoHTML.innerHTML += `
         <div id="cards_seleccionadas">
-            ${serie.plataforma != null ? `<a href="${serie.plataformaUrl}" target="_blank" id="btnPlataforma">${serie.plataforma}</a>` : `<a id="btnPlataforma">ir a Plataforma</a>`}            
+            ${serie.plataforma.plataforma != null ? `<a href="${serie.plataforma.url}" target="_blank" id="btnPlataforma">${serie.plataforma.plataforma}</a>` : `<a id="btnPlataforma">ir a Plataforma</a>`}            
             ${serie.img_small ? `<img src="${serie.img_small}" alt="">` : `<img src="https://via.placeholder.com/210x297/CCC/FF0000/?text=${serie.titulo}" alt="">`}
             <div id="pieImagen">
                 <p id="txtPie">T0-E0</p>
@@ -226,6 +227,11 @@ const agregarAMisSeries = async (resultado) => {
       return total + episodios.episodeOrder;
     }, 0);
 
+    const plat = {
+      plataforma: null,
+      url: null
+    }
+
     // construyo el objeto "serie"
     const serie = new Serie(resultado.show.id,
       resultado.show.name,
@@ -236,8 +242,7 @@ const agregarAMisSeries = async (resultado) => {
       resultado.show?.premiered,
       resultado.show?.officialSite,
       resultado.show?.summary,
-      null,
-      null,
+      plat,
       resultado.show.genres
     );
 
@@ -272,12 +277,12 @@ const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $
   $sitioOficial.setAttribute('href', serie.sitio_oficial);
   $sitioOficial.setAttribute('target', '_blamk');
 
-  if (serie.plataforma != null) {
+  if (serie.plataforma.plataforma != null) {
 
     $selPlataforma.innerHTML = '<option value="">seleccionar</option>';
     plataformas.forEach((pl) => {
-      if (pl.plataforma == serie.plataforma) {
-        $selPlataforma.innerHTML += `<option value="${serie.plataforma}" selected>${serie.plataforma}</option>`;
+      if (pl.plataforma == serie.plataforma.plataforma) {
+        $selPlataforma.innerHTML += `<option value="${serie.plataforma.plataforma}" selected>${serie.plataforma.plataforma}</option>`;
       } else {
         $selPlataforma.innerHTML += `<option value="${pl.plataforma}">${pl.plataforma}</option>`;
       }
