@@ -28,29 +28,37 @@ let arraySeriesBuscadas = [];
 
 window.addEventListener('DOMContentLoaded', () => {
 
-  //*************   carrousel   *********** */
-  let containerDimensiones = $seriesSeleccionadas.getBoundingClientRect();
-  let containerWidth = containerDimensiones.width;
+  // ************* ACCIONES INICIALES ALCARGAR LA PAGINA *****
 
-  $btnNext.addEventListener('click', () => {
-    $seriesSeleccionadas.scrollLeft += containerWidth;
-  })
+        //*************   carrousel   ****************************** */
+        let containerDimensiones = $seriesSeleccionadas.getBoundingClientRect();
+        let containerWidth = containerDimensiones.width;
 
-  $btnPrev.addEventListener('click', () => {
-    $seriesSeleccionadas.scrollLeft -= containerWidth;
-  })
-  //*************************************** */
+        $btnNext.addEventListener('click', () => {
+          $seriesSeleccionadas.scrollLeft += containerWidth;
+        })
 
-  const credenciales = JSON.parse(localStorage.getItem('credenciales'));
-  $nombreUsuario.textContent += credenciales.user;
+        $btnPrev.addEventListener('click', () => {
+          $seriesSeleccionadas.scrollLeft -= containerWidth;
+        })
+        //********************************************************** */
 
-  plataformas = JSON.parse(localStorage.getItem('plataformas'));
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        $nombreUsuario.textContent += usuario.usuario;
+
+        plataformas = JSON.parse(localStorage.getItem('plataformas'));
+
+        misSeries = usuario.series;
+        pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
+
+
+  // ************* INTERACCION CON LA PAGINA ******************
 
   document.addEventListener('click', (e) => {
 
     // Accion boton LOGOUT
     if (e.target.matches('#btnLogout')) {
-      localStorage.setItem('credenciales', JSON.stringify({ user: '', pass: '' }));
+      localStorage.setItem('usuario', JSON.stringify({ user: '', pass: '' }));
       window.location.href = '../index.html';
     }
 
@@ -73,7 +81,18 @@ window.addEventListener('DOMContentLoaded', () => {
       // obtengo la serie del array de resutados de la API
       let resultado = arraySeriesBuscadas.find((serie) => serie.show.id == idSerie);
 
-      agregarAMisSeries(resultado);
+      // compruebo si la serie ya la tiene el usuario
+      let yaEsta = false;
+      usuario.series.forEach(s => {
+        if (s.id_serie == idSerie) {
+          yaEsta = true;
+        }
+      });
+      if (!yaEsta) {
+        agregarAMisSeries(resultado, usuario.id_usuario);
+      } else {
+        Swal.fire('Ya tienes agregada la serie!');
+      }
     }
 
     // Accion boton MAS INFORMACION
@@ -84,7 +103,7 @@ window.addEventListener('DOMContentLoaded', () => {
       let idSerie = e.target.getAttribute('data-id');
 
       // obtengo la serie del array de resutados de la API
-      let resultado = misSeries.find((serie) => serie.id == idSerie);
+      let resultado = misSeries.find((serie) => serie.id_serie == idSerie);
 
       // le seteo el id de la serie en el data-atribute del boton eliminar y guardar
       $btnEliminar.setAttribute('data-id', idSerie);
@@ -202,23 +221,23 @@ const pintarSeriesSeleccionadas = (elementoHTML, array) => {
   array.forEach((serie) => {
     elementoHTML.innerHTML += `
         <div id="cards_seleccionadas">
-            ${serie.plataforma.plataforma != null ? `<a href="${serie.plataforma.url}" target="_blank" id="btnPlataforma">${serie.plataforma.plataforma}</a>` : `<a id="btnPlataforma">ir a Plataforma</a>`}            
+            ${serie.plataforma.id_plataforma != 1 ? `<a href="${serie.plataforma.url}" target="_blank" id="btnPlataforma">${serie.plataforma.plataforma}</a>` : `<a id="btnPlataforma">${serie.plataforma.plataforma}</a>`}            
             ${serie.img_small ? `<img src="${serie.img_small}" alt="">` : `<img src="https://via.placeholder.com/210x297/CCC/FF0000/?text=${serie.titulo}" alt="">`}
             <div id="pieImagen">
-                <p id="txtPie">T0-E0</p>
-                <div id="mas" data-id=${serie.id}>+</div>
+                <p id="txtPie">T${serie.temp_actual}-E${serie.episod_actual}</p>
+                <div id="mas" data-id=${serie.id_serie}>+</div>
             </div>
         </div>
         `;
   })
 }
 
-const agregarAMisSeries = async (resultado) => {
+const agregarAMisSeries = async (resultado, idUsuario) => {
 
   try {
     // hago una nueva consulta con las particularidades de la serie (devuelve un array con cada temporada)
     const serieElegida = await fetchSeriesDeAPI(`https://api.tvmaze.com/shows/${resultado.show.id}/seasons`);
-
+    
     // cuento los elementos del array
     const temporadasTotales = serieElegida.length;
 
@@ -228,8 +247,16 @@ const agregarAMisSeries = async (resultado) => {
     }, 0);
 
     const plat = {
-      plataforma: null,
+      id_plataforma: 1,
+      plataforma: 'Sin Plataforma',
       url: null
+    }
+
+    let descripcion;
+    if (resultado.show.summary) {
+      descripcion = cortarDescripcion(resultado.show.summary);
+    } else {
+      descripcion = null;
     }
 
     // construyo el objeto "serie"
@@ -239,16 +266,14 @@ const agregarAMisSeries = async (resultado) => {
       episodiosTotales,
       resultado.show.image?.medium,
       resultado.show.image?.original,
-      resultado.show?.premiered,
+      resultado.show?.premiered.substring(0,4),
       resultado.show?.officialSite,
-      resultado.show?.summary,
-      plat,
-      resultado.show.genres
-    );
+      descripcion,
+      resultado.show.genres,
+      plat
+    );    
 
-    misSeries.push(serie);
-
-    pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
+    await agregarSerieBD(serie, idUsuario);
 
   } catch (error) {
     console.log(error)
@@ -261,39 +286,86 @@ const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $
 
   $titulo.textContent = serie.titulo;
 
-  $anio.textContent = serie.anio.substring(0, 4);
+  $anio.textContent = serie.anio_lanzamiento.substring(0, 4);
 
   $genero.textContent = '';
-  serie.genero.forEach((g) => {
-    $genero.textContent += `${g} `;
-  })
+  if (serie.genero != null) {
+    serie.genero.forEach((g) => {
+      $genero.textContent += `${g} `;
+    })
+  }
 
   $descripcion.innerHTML = '';
-  if (serie.descripcion.length < 200) {
-    $descripcion.innerHTML = serie.descripcion;
-    $descripcion.classList.add('estilosDescripcion');
+  if (serie.descripcion != 'null') {
+
+    if ( serie.descripcion.length < 255 ) {
+      $descripcion.innerHTML = serie.descripcion;
+      $descripcion.classList.add('estilosDescripcion');
+    } else {      
+      $descripcion.innerHTML = cortarDescripcion(serie.descripcion);
+      $descripcion.classList.add('estilosDescripcion');
+    }
   }
 
   $sitioOficial.setAttribute('href', serie.sitio_oficial);
   $sitioOficial.setAttribute('target', '_blamk');
 
-  if (serie.plataforma.plataforma != null) {
-
-    $selPlataforma.innerHTML = '<option value="">seleccionar</option>';
-    plataformas.forEach((pl) => {
-      if (pl.plataforma == serie.plataforma.plataforma) {
-        $selPlataforma.innerHTML += `<option value="${serie.plataforma.plataforma}" selected>${serie.plataforma.plataforma}</option>`;
-      } else {
-        $selPlataforma.innerHTML += `<option value="${pl.plataforma}">${pl.plataforma}</option>`;
-      }
-    })
-
-  } else {
-
-    $selPlataforma.innerHTML = '<option value="" selected>seleccionar</option>';
-    plataformas.forEach((pl) => {
+  $selPlataforma.innerHTML = '';
+  plataformas.forEach((pl) => {
+    if (pl.plataforma == serie.plataforma.plataforma) {
+      $selPlataforma.innerHTML += `<option value="${serie.plataforma.plataforma}" selected>${serie.plataforma.plataforma}</option>`;
+    } else {
       $selPlataforma.innerHTML += `<option value="${pl.plataforma}">${pl.plataforma}</option>`;
-    })
+    };
+  });
+}
 
+const agregarSerieBD = async (serie, idUsuario) => {
+
+  const URL = 'http://localhost:8080/Series_app_backend-1.0-SNAPSHOT/api/serie';
+
+  try {
+    let response = await fetch(URL, {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify(serie)
+    });
+    
+    const respuesta = await response.json();
+    console.log(respuesta.msg)
+    relacionarUsuarioSerie(serie, idUsuario);
+
+  } catch (error) {
+    console.dir(error);
   }
+}
+
+const relacionarUsuarioSerie = async (serie, idUsuario)=> {
+  const URL = `http://localhost:8080/Series_app_backend-1.0-SNAPSHOT/api/usuario/serie/${idUsuario}`;
+
+  try {
+    let response = await fetch(URL, {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify(serie)
+    });
+    
+    const respuesta = await response.json();
+    console.log(respuesta.msg);
+
+    misSeries.push({...serie});
+    pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
+
+  } catch (error) {
+    console.dir(error);
+  }
+}
+
+const cortarDescripcion = (descripcion)=> {
+  let stringAux = descripcion.substring(0,255);
+  let indiceUltimoPunto = stringAux.lastIndexOf('.');
+  let stringCortado = `${descripcion.substring(0, indiceUltimoPunto)}.</p>`;
+  return stringCortado
 }
