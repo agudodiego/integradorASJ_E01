@@ -266,7 +266,7 @@ header {
 
 #cards_seleccionadas:hover {
     transform: scale(1.05);
-    filter: drop-shadow(8px 6px 6px #ebebeb47);
+    filter: drop-shadow(8px 6px 6px #ebebeb6a);
 }
 
 #imagen {
@@ -407,8 +407,9 @@ header {
 
 #temporada>div, #episodio>div {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
+    gap: 10px;
     margin-top: 10px;
 }
 
