@@ -266,6 +266,7 @@ header {
 
 #cards_seleccionadas:hover {
     transform: scale(1.05);
+    filter: drop-shadow(8px 6px 6px #ebebeb47);
 }
 
 #imagen {
@@ -411,11 +412,13 @@ header {
     margin-top: 10px;
 }
 
-#temporada #display, #episodio #display {
-    color: var(--orange-color);
+#display {
+    display: flex;
+    justify-content: space-between;
 }
 
-#display {
+#display p{
+    color: var(--orange-color);
     font-size: 1.5em;
     font-weight: 700;
 }

@@ -17,13 +17,20 @@ const $anio = document.getElementById('anio');
 const $genero = document.getElementById('genero');
 const $descripcion = document.getElementById('descripcion');
 const $detSerie = document.getElementById('detSerie');
+const $sumarT = document.getElementById('sumarT');
+const $restarT = document.getElementById('restarT');
+const $sumarE = document.getElementById('sumarE');
+const $restarE = document.getElementById('restarE');
+const $TA = document.getElementById('TA');
+const $TT = document.getElementById('TT');
+const $EA = document.getElementById('EA');
+const $ET = document.getElementById('ET');
 const $sitioOficial = document.getElementById('sitioOficial');
 const $btnEliminar = document.getElementById('btnEliminar');
 const $btnGuardar = document.getElementById('btnGuardar');
 const $selPlataforma = document.getElementById('selPlataforma');
 
 let plataformas = [];
-let misSeries = [];
 let arraySeriesBuscadas = [];
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -48,8 +55,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         plataformas = JSON.parse(localStorage.getItem('plataformas'));
 
-        misSeries = usuario.series;
-        pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
+        // misSeries = usuario.series;
+        pintarSeriesSeleccionadas($seriesSeleccionadas, usuario.series);
 
 
   // ************* INTERACCION CON LA PAGINA ******************
@@ -89,7 +96,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
       });
       if (!yaEsta) {
-        agregarAMisSeries(resultado, usuario.id_usuario);
+        agregarAMisSeries(resultado, usuario);
       } else {
         Swal.fire('Ya tienes agregada la serie!');
       }
@@ -102,20 +109,40 @@ window.addEventListener('DOMContentLoaded', () => {
       // obtengo el id de la serie sobre la cual se clickeo
       let idSerie = e.target.getAttribute('data-id');
 
-      // obtengo la serie del array de resutados de la API
-      let resultado = misSeries.find((serie) => serie.id_serie == idSerie);
-
+      // obtengo la serie del array de series del usuario
+      let resultado = usuario.series.find((serie) => serie.id_serie == idSerie);
+      
       // le seteo el id de la serie en el data-atribute del boton eliminar y guardar
       $btnEliminar.setAttribute('data-id', idSerie);
       $btnGuardar.setAttribute('data-id', idSerie);
-
-      llenarCardDetalleSeries(resultado, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial, $selPlataforma, plataformas);
+      llenarCardDetalleSeries(resultado, $titulo, $anio, $genero, $descripcion, $detSerie, $TA, $TT, $EA, $ET,  $sitioOficial, $selPlataforma, plataformas);
 
     }
 
     //************************************ 
     //       CARD DETALLE SERIES
     //************************************ 
+
+    // Acciones de los BOTONES SUMAR Y RESTAR
+    if (e.target.matches('#sumarT')) { 
+      let tempActual = parseInt($TA.textContent);
+      sumar($TA, tempActual);
+    }
+    
+    if (e.target.matches('#restarT')) { 
+      let tempActual = parseInt($TA.textContent);
+      restar($TA, tempActual);      
+    }
+    
+    if (e.target.matches('#sumarE')) { 
+      let episodActual = parseInt($EA.textContent);
+      sumar($EA, episodActual);
+    }
+
+    if (e.target.matches('#restarE')) { 
+      let episodActual = parseInt($EA.textContent);
+      restar($EA, episodActual);
+    }
 
     // Accion boton GUARDAR
     if (e.target.matches('#btnGuardar')) {
@@ -125,31 +152,22 @@ window.addEventListener('DOMContentLoaded', () => {
       // obtengo el id de la serie sobre la cual se clickeo
       let idSerie = e.target.getAttribute('data-id');
 
-      // obtengo la serie del array de resutados de la API
-      let resultado = misSeries.find((serie) => serie.id == idSerie);
+      // obtengo la serie del array de series del usuario
+      let resultado = usuario.series.find((serie) => serie.id_serie == idSerie);      
 
+      // chequeo que el usuario haya cambiado la plataforma
       if (resultado.plataforma.plataforma != seleccion) {
-
-        if (plataforma) {
-          resultado.plataforma.plataforma = seleccion;
-          resultado.plataforma.url = plataforma.url;
-          pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
-        } else {
-          resultado.plataforma.plataforma = null;
-          resultado.plataforma.url = null;
-          pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
-        }
+        
+        resultado.plataforma.id_plataforma = plataforma.id_plataforma;
+        resultado.plataforma.plataforma = seleccion;
+        resultado.plataforma.url = plataforma.url;
 
       }
-
-      $detalleSerie.classList.add('hidden');
-      $descripcion.classList.remove('estilosDescripcion');
-    }
-
-    // Accion boton CERRAR POP-UP DETALLES
-    if (e.target.matches('#close')) {
-      $detalleSerie.classList.add('hidden');
-      $descripcion.classList.remove('estilosDescripcion');
+      
+      resultado.temp_actual = parseInt($TA.textContent);   
+      resultado.episod_actual = parseInt($EA.textContent);   
+      
+      actualizarSerie(resultado, usuario);
     }
 
     // Accion boton ELIMINAR
@@ -157,17 +175,11 @@ window.addEventListener('DOMContentLoaded', () => {
       // obtengo el id de la serie sobre la cual se clickeo
       let idSerie = e.target.getAttribute('data-id');
 
-      // obtengo la serie del array de resutados de la API
-      let resultado = misSeries.find((serie) => serie.id == idSerie);
+      quitarSerie(idSerie, usuario);
+    }
 
-      // obtengo el indice del elemento recuperado en el array de series guardadas
-      let index = misSeries.indexOf(resultado);
-
-      // quito del array la serie a eliminar segun el indice obtenido
-      misSeries.splice(index, 1);
-
-      pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
-
+    // Accion boton CERRAR POP-UP DETALLES
+    if (e.target.matches('#close')) {
       $detalleSerie.classList.add('hidden');
       $descripcion.classList.remove('estilosDescripcion');
     }
@@ -232,7 +244,7 @@ const pintarSeriesSeleccionadas = (elementoHTML, array) => {
   })
 }
 
-const agregarAMisSeries = async (resultado, idUsuario) => {
+const agregarAMisSeries = async (resultado, usuario) => {
 
   try {
     // hago una nueva consulta con las particularidades de la serie (devuelve un array con cada temporada)
@@ -270,10 +282,11 @@ const agregarAMisSeries = async (resultado, idUsuario) => {
       resultado.show?.officialSite,
       descripcion,
       resultado.show.genres,
-      plat
+      plat,
+      true
     );    
 
-    await agregarSerieBD(serie, idUsuario);
+    await agregarSerieBD(serie, usuario);
 
   } catch (error) {
     console.log(error)
@@ -281,7 +294,8 @@ const agregarAMisSeries = async (resultado, idUsuario) => {
 
 }
 
-const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $detSerie, $sitioOficial, $selPlataforma, plataformas) => {
+const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $detSerie, $TA, $TT, $EA, $ET, $sitioOficial, $selPlataforma, plataformas) => {
+  
   $detSerie.style.backgroundImage = `url('${serie.img_big}')`;
 
   $titulo.textContent = serie.titulo;
@@ -295,6 +309,11 @@ const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $
     })
   }
 
+  $TA.textContent = serie.temp_actual;
+  $TT.textContent = serie.temporadas;
+  $EA.textContent = serie.episod_actual;
+  $ET.textContent = serie.episodios;
+  
   $descripcion.innerHTML = '';
   if (serie.descripcion != 'null') {
 
@@ -320,7 +339,7 @@ const llenarCardDetalleSeries = (serie, $titulo, $anio, $genero, $descripcion, $
   });
 }
 
-const agregarSerieBD = async (serie, idUsuario) => {
+const agregarSerieBD = async (serie, usuario) => {
 
   const URL = 'http://localhost:8080/Series_app_backend-1.0-SNAPSHOT/api/serie';
 
@@ -334,15 +353,15 @@ const agregarSerieBD = async (serie, idUsuario) => {
     
     const respuesta = await response.json();
     console.log(respuesta.msg)
-    relacionarUsuarioSerie(serie, idUsuario);
+    relacionarUsuarioSerie(serie, usuario);
 
   } catch (error) {
     console.dir(error);
   }
 }
 
-const relacionarUsuarioSerie = async (serie, idUsuario)=> {
-  const URL = `http://localhost:8080/Series_app_backend-1.0-SNAPSHOT/api/usuario/serie/${idUsuario}`;
+const relacionarUsuarioSerie = async (serie, usuario)=> {
+  const URL = `http://localhost:8080/Series_app_backend-1.0-SNAPSHOT/api/usuario/serie/${usuario.id_usuario}`;
 
   try {
     let response = await fetch(URL, {
@@ -355,8 +374,7 @@ const relacionarUsuarioSerie = async (serie, idUsuario)=> {
     const respuesta = await response.json();
     console.log(respuesta.msg);
 
-    misSeries.push({...serie});
-    pintarSeriesSeleccionadas($seriesSeleccionadas, misSeries);
+    traerDatosActualizados(usuario.usuario, $seriesSeleccionadas);
 
   } catch (error) {
     console.dir(error);
@@ -368,4 +386,99 @@ const cortarDescripcion = (descripcion)=> {
   let indiceUltimoPunto = stringAux.lastIndexOf('.');
   let stringCortado = `${descripcion.substring(0, indiceUltimoPunto)}.</p>`;
   return stringCortado
+}
+
+const quitarSerie = async (idSerie, usuario)=> {
+
+  // obtengo la serie del array de series del usuario
+  let resultado = usuario.series.find((serie) => serie.id_serie == idSerie);
+  resultado.activa = false;
+
+  const URL = `http://localhost:8080/Series_app_backend-1.0-SNAPSHOT/api/usuario/serie/${usuario.id_usuario}`;
+
+  try {
+    let response = await fetch(URL, {
+      method: 'PUT',
+      cache: 'no-cache',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify(resultado)
+    });
+    
+    const respuesta = await response.json();
+    console.log(respuesta.msg);
+
+    // obtengo el indice del elemento recuperado en el array de series guardadas
+    let index = usuario.series.indexOf(resultado);
+    
+    // quito del array la serie a eliminar segun el indice obtenido
+    usuario.series.splice(index, 1);
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+
+    pintarSeriesSeleccionadas($seriesSeleccionadas, usuario.series);
+
+    $detalleSerie.classList.add('hidden');
+    $descripcion.classList.remove('estilosDescripcion');
+  } catch (error) {
+    console.dir(error);
+  }
+
+}
+
+const actualizarSerie = async (resultado, usuario)=> {
+
+  const URL = `http://localhost:8080/Series_app_backend-1.0-SNAPSHOT/api/usuario/serie/${usuario.id_usuario}`;
+
+  try {
+    let response = await fetch(URL, {
+      method: 'PUT',
+      cache: 'no-cache',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify(resultado)
+    });
+    
+    const respuesta = await response.json();
+    console.log(respuesta.msg);
+
+    // obtengo el indice del elemento recuperado en el array de series guardadas
+    let index = usuario.series.indexOf(resultado);
+    
+    // actualizo en el array la serie
+    usuario.series.splice(index, 1, resultado);
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+
+    pintarSeriesSeleccionadas($seriesSeleccionadas, usuario.series);
+
+    $detalleSerie.classList.add('hidden');
+    $descripcion.classList.remove('estilosDescripcion');
+  } catch (error) {
+    console.dir(error);
+  }
+
+}
+
+const traerDatosActualizados = async (nombre,$seriesSeleccionadas)=> {
+
+  const url = `http://localhost:8080/Series_app_backend-1.0-SNAPSHOT/api/usuario/${nombre}`;
+
+  try {
+      const response = await fetch(url);
+      const usuario = await response.json();
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+      
+      pintarSeriesSeleccionadas($seriesSeleccionadas, usuario.series);
+      window.location.reload();
+
+  } catch (error) {
+      console.error(error);
+  }
+}
+
+const sumar = (elementoHTML, variable)=> {
+    variable++;
+    elementoHTML.textContent = variable;
+}
+
+const restar = (elementoHTML, variable)=> {
+  variable--;
+  elementoHTML.textContent = variable;
 }
